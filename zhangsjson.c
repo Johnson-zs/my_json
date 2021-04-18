@@ -29,12 +29,22 @@ static int zhangs_parse_null(zhangs_context *c, zhangs_value *v)
 // t ➔ true
 static int zhangs_parse_true(zhangs_context *c, zhangs_value *v)
 {
+    EXPECT(c, 't');
+    if (c->json[0] != 'r' || c->json[1] != 'u' || c->json[2] != 'e')
+        return ZHANGS_PARSE_INVALID_VALUE;
+    c->json += 3;
+    v->type = ZHANGS_TRUE;
     return ZHANGS_PARSE_OK;
 }
 
 // f ➔ false
 static int zhangs_parse_false(zhangs_context *c, zhangs_value *v)
 {
+    EXPECT(c, 'f');
+    if (c->json[0] != 'a' || c->json[1] != 'l' || c->json[2] != 's' || c->json[3] != 'e')
+        return ZHANGS_PARSE_INVALID_VALUE;
+    c->json += 4;
+    v->type = ZHANGS_FALSE;
     return ZHANGS_PARSE_OK;
 }
 
@@ -49,6 +59,8 @@ static int zhangs_parse_value(zhangs_context *c, zhangs_value *v)
 {
     switch (*(c->json)) {
     case 'n': return zhangs_parse_null(c, v);
+    case 't': return zhangs_parse_true(c, v);
+    case 'f': return zhangs_parse_false(c, v);
     case '\0': return ZHANGS_PARSE_EXPECT_VALUE;
     default: return ZHANGS_PARSE_INVALID_VALUE;
     }
