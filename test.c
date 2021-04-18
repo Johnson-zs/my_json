@@ -27,11 +27,70 @@ static void test_parse_null()
     v.type = ZHANGS_FALSE;
     EXPECT_EQ_INT(ZHANGS_PARSE_OK, zhangs_parse("null", &v));
     EXPECT_EQ_INT(ZHANGS_NULL, zhangs_get_type(&v));
+
+    v.type = ZHANGS_FALSE;
+    EXPECT_EQ_INT(ZHANGS_PARSE_OK, zhangs_parse("    null   ", &v));
+    EXPECT_EQ_INT(ZHANGS_NULL, zhangs_get_type(&v));
+}
+
+static void test_parse_true()
+{
+    zhangs_value v;
+    v.type = ZHANGS_FALSE;
+
+    EXPECT_EQ_INT(ZHANGS_PARSE_OK, zhangs_parse("true", &v));
+    EXPECT_EQ_INT(ZHANGS_TRUE, v.type);
+}
+
+static void test_parse_false()
+{
+    zhangs_value v;
+    v.type = ZHANGS_TRUE;
+
+    EXPECT_EQ_INT(ZHANGS_PARSE_OK, zhangs_parse("false", &v));
+    EXPECT_EQ_INT(ZHANGS_FALSE, v.type);
+}
+
+static void test_parse_expect_value()
+{
+    zhangs_value v;
+    v.type = ZHANGS_FALSE;
+    EXPECT_EQ_INT(ZHANGS_PARSE_EXPECT_VALUE, zhangs_parse("", &v));
+    EXPECT_EQ_INT(ZHANGS_NULL, v.type);
+
+    v.type = ZHANGS_FALSE;
+    EXPECT_EQ_INT(ZHANGS_PARSE_EXPECT_VALUE, zhangs_parse(" ", &v));
+    EXPECT_EQ_INT(ZHANGS_NULL, v.type);
+}
+
+static void test_parse_invalid_value()
+{
+    zhangs_value v;
+    v.type = ZHANGS_FALSE;
+    EXPECT_EQ_INT(ZHANGS_PARSE_INVALID_VALUE, zhangs_parse("t", &v));
+    EXPECT_EQ_INT(ZHANGS_NULL, v.type);
+
+    v.type = ZHANGS_FALSE;
+    EXPECT_EQ_INT(ZHANGS_PARSE_INVALID_VALUE, zhangs_parse("nul", &v));
+    EXPECT_EQ_INT(ZHANGS_NULL, v.type);
+}
+
+static void test_parse_root_not_singular()
+{
+    zhangs_value v;
+    v.type = ZHANGS_FALSE;
+    EXPECT_EQ_INT(ZHANGS_PARSE_ROOT_NOT_SINGULAR, zhangs_parse("null t", &v));
+    EXPECT_EQ_INT(ZHANGS_NULL, v.type);
 }
 
 static void test_parse()
 {
+    test_parse_expect_value();
+    test_parse_invalid_value();
+    test_parse_root_not_singular();
     test_parse_null();
+    test_parse_true();
+    test_parse_false();
 }
 
 int main()

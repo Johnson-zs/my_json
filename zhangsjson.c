@@ -26,6 +26,18 @@ static int zhangs_parse_null(zhangs_context *c, zhangs_value *v)
     return ZHANGS_PARSE_OK;
 }
 
+// t ➔ true
+static int zhangs_parse_true(zhangs_context *c, zhangs_value *v)
+{
+    return ZHANGS_PARSE_OK;
+}
+
+// f ➔ false
+static int zhangs_parse_false(zhangs_context *c, zhangs_value *v)
+{
+    return ZHANGS_PARSE_OK;
+}
+
 // n ➔ null
 // t ➔ true
 // f ➔ false
@@ -57,7 +69,13 @@ int zhangs_parse(const char *json, zhangs_value *v)
     c.json = json;
     v->type = ZHANGS_NULL;
     zhangs_parse_whitespace(&c);
-    return zhangs_parse_value(&c, v);
+    int ret = zhangs_parse_value(&c, v);
+    if (ret == ZHANGS_PARSE_OK) {
+        zhangs_parse_whitespace(&c);
+        if (c.json[0] != '\0')
+            ret = ZHANGS_PARSE_ROOT_NOT_SINGULAR;
+    }
+    return ret;
 }
 
 zhangs_type zhangs_get_type(const zhangs_value *v)
