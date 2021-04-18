@@ -68,10 +68,6 @@ static int zhangs_parse_value(zhangs_context *c, zhangs_value *v)
 
 // JSON-text = ws value ws
 // ws = *(%x20 / %x09 / %x0A / %x0D)
-// value = null / false / true
-// null  = "null"
-// false = "false"
-// true  = "true"
 int zhangs_parse(const char *json, zhangs_value *v)
 {
     // 如果那个错误是由于程序员错误编码所造成的（例如传入不合法的参数），那么应用断言；
